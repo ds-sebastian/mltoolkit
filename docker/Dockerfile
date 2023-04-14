@@ -1,5 +1,11 @@
 # Use a base Python image
-FROM python:3.9.10-slim
+FROM python:3.10-slim-bullseye
+
+# Install necessary dependencies for psycopg2
+RUN apt-get update && apt-get install -y \
+        gcc \
+        libpq-dev \
+        && rm -rf /var/lib/apt/lists/*
 
 # Install Aim, MLflow, and their dependencies
 RUN pip install --no-cache-dir \
