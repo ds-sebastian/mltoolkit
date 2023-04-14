@@ -3,7 +3,7 @@ name: Publish Docker Image
 on:
   push:
     branches:
-      - main # or your default branch name, e.g., "master"
+      - master # or your default branch name, e.g., "main"
 
 jobs:
   push_to_registry:
