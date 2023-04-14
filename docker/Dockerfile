@@ -10,8 +10,11 @@ RUN apt-get update && apt-get install -y \
 # Install Aim, MLflow, and their dependencies
 RUN pip install --no-cache-dir \
         Cython==3.0.0a9 \
+        psycopg2 \
         aim \
-        mlflow
+        mlflow \
+        aim-mlflow
+        
 
 # Create working directory and initialize Aim
 WORKDIR /opt/aim
@@ -34,4 +37,5 @@ CMD /bin/sh -c "\
         & \
     aim up --host 0.0.0.0 --port 43800 & \
     aim server --host 0.0.0.0 --port 53800 \
+    aimlflow sync --mlflow-tracking-uri=0.0.0.0:5000 --aim-repo=/opt/aim
     "
