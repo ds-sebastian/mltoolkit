@@ -1,4 +1,4 @@
-# Use the base Python image
+# Use a base Python image
 FROM python:3.9.10-slim
 
 # Install Aim, MLflow, and their dependencies
