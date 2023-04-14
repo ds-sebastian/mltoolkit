@@ -34,8 +34,10 @@ CMD /bin/sh -c "\
         --backend-store-uri ${BACKEND_STORE_URI} \
         --default-artifact-root ${DEFAULT_ARTIFACT_ROOT} \
         & \
-    aim init && \
-    aim server --host 0.0.0.0 --port 53800 && \
+    if [ ! -d \".aim\" ]; then \
+        aim init; \
+    fi && \
+    aim server --host 0.0.0.0 --port 53800 &&\
     aim up --host 0.0.0.0 --port 43800 && \
     aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:5000 --aim-repo=/opt/aim \
     "
