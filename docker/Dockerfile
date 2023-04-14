@@ -29,5 +29,3 @@ CMD /bin/sh -c "\
     aim up --host 0.0.0.0 --port 43800 & \
     aim server --host 0.0.0.0 --port 53800 \
     "
-
-# 
