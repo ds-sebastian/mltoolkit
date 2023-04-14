@@ -36,6 +36,6 @@ CMD /bin/sh -c "\
         --default-artifact-root ${DEFAULT_ARTIFACT_ROOT} \
         & \
     aim up --host 0.0.0.0 --port 43800 & \
-    aim server --host 0.0.0.0 --port 53800 \
-    aimlflow sync --mlflow-tracking-uri=0.0.0.0:5000 --aim-repo=/opt/aim
+    aim server --host 0.0.0.0 --port 53800 & \
+    aimlflow sync --mlflow-tracking-uri=0.0.0.0:5000 --aim-repo=/opt/aim \
     "
