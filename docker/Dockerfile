@@ -5,7 +5,7 @@ LABEL maintainer="Sebastian <sebastian@gbthome.com>"
 # Install necessary dependencies for psycopg2
 RUN apt-get update && apt-get install -y \
         gcc \
-        libpq \
+        libpq-dev \
         && rm -rf /var/lib/apt/lists/*
 
 # Install Aim, MLflow, and their dependencies
