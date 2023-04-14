@@ -37,5 +37,5 @@ CMD /bin/sh -c "\
         & \
     aim up --host 0.0.0.0 --port 43800 & \
     aim server --host 0.0.0.0 --port 53800 & \
-    aimlflow sync --mlflow-tracking-uri=0.0.0.0:5000 --aim-repo=/opt/aim \
+    aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:5000 --aim-repo=/opt/aim \
     "
