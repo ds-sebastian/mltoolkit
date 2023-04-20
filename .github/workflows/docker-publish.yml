@@ -8,6 +8,8 @@ on:
       - 'docker/Dockerfile'
       - '.github/workflows/docker_build_push.yml'
       - 'readme.md'
+  schedule:
+    - cron: '0 0 1 * *' # Run the workflow on the 1st day of every month at midnight
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
