@@ -26,7 +26,7 @@ aim up --host 0.0.0.0 --port $AIM_UI_PORT &
 aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:$MLFLOW_PORT --aim-repo=/mltoolkit/aim &
 
 # Start Jupyter Lab
-jupyter lab --ip=0.0.0.0 --port=$JUPYTER_PORT --no-browser &
+jupyter lab --ip=0.0.0.0 --port=$JUPYTER_PORT --no-browser --allow-root &
 
 # Keep the script running
 tail -f /dev/null
