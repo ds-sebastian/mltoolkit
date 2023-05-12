@@ -5,7 +5,8 @@ on:
     branches:
       - master
     paths:
-      - 'docker/'
+      - 'docker/Dockerfile'
+      - 'docker/start_toolkit.sh'
       - '.github/workflows/docker_build_push.yml'
       - 'readme.md'
   schedule:
@@ -27,7 +28,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./docker/Dockerfile
+          context: ./docker
+          file: Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
