@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'docker/Dockerfile'
+      - 'docker/'
       - '.github/workflows/docker_build_push.yml'
       - 'readme.md'
   schedule:
