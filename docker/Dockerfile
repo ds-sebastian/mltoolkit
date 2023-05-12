@@ -55,7 +55,7 @@ RUN mamba update --all -y \
     else \
         mamba install pytorch torchvision torchaudio pytorch-cuda=${CUDA_VERSION} -c pytorch -c nvidia -y ; \
     fi \
-    && pip install aim-mlflow \
+    && pip install aim-mlflow xgboost \
     && mamba clean --all -y"
 
 # Expose the ports used by MLflow, Aim, JupyterLab
