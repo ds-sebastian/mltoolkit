@@ -1,43 +1,77 @@
+# Arguments
+ARG CPU_ONLY=0 
+ARG PY_VERSION=3.11
+ARG CUDA_VERSION=11.1
+
 # Use a base Python image
-FROM python:3.10-slim-bullseye
-LABEL maintainer="Sebastian <sebastian@gbthome.com>"
+FROM python:${PY_VERSION}-slim-buster
 
-# Install necessary dependencies for psycopg2
-RUN apt-get update && apt-get install -y \
-        gcc \
-        libpq-dev \
-        && rm -rf /var/lib/apt/lists/*
+LABEL maintainer="Sebastian <sebastian@domain.com>"
 
-# Install Aim, MLflow, and their dependencies
-RUN pip install --no-cache-dir \
-        Cython \
-        psycopg2 \
-        aim \
-        mlflow \
-        aim-mlflow
-        
-# Create working directory
-WORKDIR /opt/aim
+# Set the working directory in the container
+WORKDIR /mltoolkit
 
-# Expose the ports used by MLflow and Aim
-EXPOSE 5000 43800 53800
+# Install necessary dependencies for psycopg2 and other tools Python and Mamba
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends\
+    git \
+    gcc \
+    wget \ 
+    libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-pypy3-Linux-x86_64.sh" && \
+    bash Mambaforge-pypy3-Linux-x86_64.sh -b -p /opt/conda && \
+    rm Mambaforge-pypy3-Linux-x86_64.sh 
 
-# Set environment variable for backend-store-uri
-ENV BACKEND_STORE_URI /opt/aim/mlflow/store
-ENV DEFAULT_ARTIFACT_ROOT /opt/aim/mlflow/artifacts
+# Set path to mamba
+ENV PATH /opt/conda/bin:$PATH
 
-# Set the entrypoint to start both servers
-CMD /bin/sh -c "\
-    mlflow server \
-        --host 0.0.0.0 \
-        --port 5000 \
-        --backend-store-uri ${BACKEND_STORE_URI} \
-        --default-artifact-root ${DEFAULT_ARTIFACT_ROOT} \
-        & \
-    if [ ! -d \".aim\" ]; then \
-        aim init; \
-    fi && \
-    aim server --host 0.0.0.0 --port 53800 &\
-    aim up --host 0.0.0.0 --port 43800 & \
-    aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:5000 --aim-repo=/opt/aim \
-    "
+# Create mltoolkit environment and install packages
+RUN mamba update --all -y \
+    && mamba create -n mltoolkit python=${PY_VERSION} \
+    && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
+    && echo "conda activate mltoolkit" >> ~/.bashrc \
+    && /bin/bash -c ". /opt/conda/etc/profile.d/conda.sh && conda activate mltoolkit \
+    && mamba install \
+    python \
+    pip \
+    psycopg2 \
+    aim \
+    mlflow \
+    scikit-learn \
+    matplotlib \
+    seaborn \
+    pandas \
+    numpy \
+    scipy \
+    tqdm \
+    ipywidgets \
+    ipython \
+    ipykernel \
+    jupyterlab \
+    -c conda-forge \
+    && if [ \"${CPU_ONLY}\" -eq 1 ] ; then \
+        mamba install pytorch torchvision torchaudio cpuonly -c pytorch -c conda-forge -y; \
+    else \
+        mamba install pytorch torchvision torchaudio pytorch-cuda=${CUDA_VERSION} -c pytorch -c nvidia -y ; \
+    fi \
+    && pip install aim-mlflow
+    && mamba clean --all -y"
+
+# Expose the ports used by MLflow, Aim, JupyterLab
+EXPOSE 5000 43800 53800 8888
+
+# Set the entrypoint to start servers
+ENV BACKEND_STORE_URI /mltoolkit/mlflow/store
+ENV DEFAULT_ARTIFACT_ROOT /mltoolkit/mlflow/artifacts
+ENV AIM_UI_PORT=43800
+ENV AIM_SERVER_PORT=53800
+ENV MLFLOW_PORT=5000
+ENV JUPYTER_PORT=8888
+
+# Copy a script that starts all the services
+COPY start_toolkit.sh /mltoolkit/start_toolkit.sh
+RUN chmod +x /mltoolkit/start_toolkit.sh
+
+ENTRYPOINT ["/mltoolkit/start_toolkit.sh"]
