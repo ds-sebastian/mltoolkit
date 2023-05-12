@@ -42,13 +42,16 @@ RUN mamba update --all -y \
     matplotlib \
     seaborn \
     pandas \
+    nltk \
     numpy \
     scipy \
     tqdm \
     ipywidgets \
     ipython \
     ipykernel \
+    transformers \
     jupyterlab \
+    -c huggingface \
     -c conda-forge \
     && if [ \"${CPU_ONLY}\" -eq 1 ] ; then \
         mamba install pytorch torchvision torchaudio cpuonly -c pytorch -c conda-forge -y; \
