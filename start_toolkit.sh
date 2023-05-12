@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Activate the mltoolkit environment
+. /opt/conda/etc/profile.d/conda.sh
+conda activate mltoolkit
+
 # Start the MLflow server
 mlflow server \
     --host 0.0.0.0 \
