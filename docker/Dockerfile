@@ -5,8 +5,7 @@ ARG CUDA_VERSION=11.1
 
 # Use a base Python image
 FROM python:${PY_VERSION}-slim-buster
-
-LABEL maintainer="Sebastian <sebastian@domain.com>"
+LABEL maintainer="Sebastian <sebastian@gbthome.com>"
 
 # Set the working directory in the container
 WORKDIR /mltoolkit
