@@ -15,13 +15,14 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Set the entrypoint to start servers
 ENV BACKEND_STORE_URI /home/${NB_USER}/mlflow/store
 ENV DEFAULT_ARTIFACT_ROOT /home/${NB_USER}/mlflow/artifacts
-ENV AIM_UI_PORT=43800
-ENV AIM_SERVER_PORT=53800
+# ENV AIM_UI_PORT=43800
+# ENV AIM_SERVER_PORT=53800
 ENV MLFLOW_PORT=5000
 # ENV JUPYTER_PORT=8888 #? Already defined in base image
 
 # Expose the ports used by MLflow, Aim
-EXPOSE $MLFLOW_PORT $AIM_UI_PORT $AIM_SERVER_PORT
+EXPOSE $MLFLOW_PORT 
+#$AIM_UI_PORT $AIM_SERVER_PORT
 
 USER root
 
@@ -33,9 +34,6 @@ RUN apt-get -q update && \
 
 
 USER $NB_UID
-
-# Set the appropriate permissions for the home directory
-RUN chown -R ${NB_USER}:users /home/${NB_USER}
 
 # Install packages 
 # Rapids AI doesn not support Python 3.11 yet
@@ -52,7 +50,7 @@ RUN mamba update --all -y \
     # 'cudf' \
     # 'cugraph' \
     # 'cuml' \
-    'aim' \
+    # 'aim' \
     'mlflow' \
     'nltk' \ 
     'transformers' \
@@ -61,7 +59,7 @@ RUN mamba update --all -y \
     && mamba clean --all -f -y \
     && pip install \
         xgboost \
-        aim-mlflow \
+        # aim-mlflow \
         argparse \
         astropy \
         bowtie \
