@@ -35,7 +35,7 @@ RUN apt-get -q update && \
 USER $NB_UID
 
 # Set the appropriate permissions for the home directory
-RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
+RUN chown -R ${NB_USER}:users /home/${NB_USER}
 
 # Install packages 
 # Rapids AI doesn not support Python 3.11 yet
