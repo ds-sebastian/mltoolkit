@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# Activate the mltoolkit environment
-. /opt/conda/etc/profile.d/conda.sh
-conda activate mltoolkit
+# Create necessary directories if they do not exist
+mkdir -p ${BACKEND_STORE_URI} ${DEFAULT_ARTIFACT_ROOT}
 
 # Start the MLflow server
 mlflow server \
@@ -17,16 +16,16 @@ if [ ! -d ".aim" ]; then
 fi
 
 # Start the Aim server
-aim server --host 0.0.0.0 --port $AIM_SERVER_PORT &
+aim server --host 127.0.0.1 --port $AIM_SERVER_PORT &
 
 # Start Aim UI
-aim up --host 0.0.0.0 --port $AIM_UI_PORT & 
+aim up --host 127.0.0.1 --port $AIM_UI_PORT & 
 
 # Sync Aim with MLflow
-aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:$MLFLOW_PORT --aim-repo=/mltoolkit/aim &
+aimlflow sync --mlflow-tracking-uri=http://0.0.0.0:$MLFLOW_PORT --aim-repo=/home/${NB_USER}/aim &
 
-# Start Jupyter Lab
-jupyter lab --ip=0.0.0.0 --port=$JUPYTER_PORT --no-browser --allow-root &
+# Start Jupyter Notebook using the base image's script
+exec start-notebook.sh
 
 # Keep the script running
-tail -f /dev/null
+# tail -f /dev/null
